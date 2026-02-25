@@ -1,5 +1,7 @@
 package com.javaweb.api;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,22 +15,36 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.javaweb.beans.BuildingDTO;
+import com.javaweb.beans.ErrorResponseDTO;
+import com.javaweb.customException.FieldRequiredException;
 
 @RestController
 public class BuildingAPI {
-	@RequestMapping(value = "/api/building", method = RequestMethod.GET)
-	public void building(@RequestParam Map<String, String> params) {
-		System.out.print(5/0);
-		for(Map.Entry<String, String> mp : params.entrySet()) {
-			System.out.println(mp.getKey() + ": " + mp.getValue());
-		}
-	}
 	@PostMapping(value = "/api/building")
-	public void createBuilding(@RequestBody Map<String, String> body) {
-		for(Map.Entry<String, String> mp : body.entrySet()) {
-			System.out.println(mp.getKey() + ": " + mp.getValue());
+	public ErrorResponseDTO building(@RequestBody BuildingDTO buildingDTO) {
+		try {
+			valiDate(buildingDTO);
+		}catch(FieldRequiredException e){
+			ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO();
+			errorResponseDTO.setError(e.getMessage());
+			List<String> details = new ArrayList<>();
+			details.add("Xem lại phần name và numberOfBasement!");
+			errorResponseDTO.setDetails(details);
+			return errorResponseDTO;
+		}
+		return null;
+	}
+	public void valiDate(BuildingDTO buildingDTO) throws FieldRequiredException{
+		if(buildingDTO.getName() == "" || buildingDTO.getNumberOfBasement() == null || buildingDTO.getName() == null) {
+			throw new FieldRequiredException("name or numberOfBasement is null!");
 		}
 	}
+//	@PostMapping(value = "/api/building")
+//	public void createBuilding(@RequestBody Map<String, String> body) {
+//		for(Map.Entry<String, String> mp : body.entrySet()) {
+//			System.out.println(mp.getKey() + ": " + mp.getValue());
+//		}
+//	}
 	@PutMapping(value = "/api/building/update")
 	public BuildingDTO updateBuilding(@RequestBody BuildingDTO buildingDTO) {
 		return buildingDTO;
