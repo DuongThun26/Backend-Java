@@ -1,10 +1,10 @@
-package com.javaweb.beans;
+package com.javaweb.repository.entity;
 
-public class BuildingDTO {
+public class BuildingEntity {
 	private String name;
-	private String numberOfBasement;
 	private String ward;
 	private String city;
+	private String numberOfBasement;
 	private String color;
 	public String getName() {
 		return name;
@@ -18,6 +18,12 @@ public class BuildingDTO {
 	public void setNumberOfBasement(String numberOfBasement) {
 		this.numberOfBasement = numberOfBasement;
 	}
+	public String getColor() {
+		return color;
+	}
+	public void setColor(String color) {
+		this.color = color;
+	}
 	public String getWard() {
 		return ward;
 	}
@@ -29,12 +35,6 @@ public class BuildingDTO {
 	}
 	public void setCity(String city) {
 		this.city = city;
-	}
-	public String getColor() {
-		return color;
-	}
-	public void setColor(String color) {
-		this.color = color;
 	}
 	
 }

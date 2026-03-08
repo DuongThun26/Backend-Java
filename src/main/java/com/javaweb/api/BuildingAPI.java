@@ -1,50 +1,40 @@
 package com.javaweb.api;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.javaweb.beans.BuildingDTO;
-import com.javaweb.beans.ErrorResponseDTO;
 import com.javaweb.customException.FieldRequiredException;
+import com.javaweb.model.BuildingDTO;
+import com.javaweb.service.BuildingService;
 
 @RestController
 public class BuildingAPI {
+	@Autowired
+	private BuildingService buildingService;
 	@PostMapping(value = "/api/building")
-	public ErrorResponseDTO building(@RequestBody BuildingDTO buildingDTO) {
-		try {
-			valiDate(buildingDTO);
-		}catch(FieldRequiredException e){
-			ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO();
-			errorResponseDTO.setError(e.getMessage());
-			List<String> details = new ArrayList<>();
-			details.add("Xem lại phần name và numberOfBasement!");
-			errorResponseDTO.setDetails(details);
-			return errorResponseDTO;
-		}
-		return null;
+	public Object createBuilding(@RequestBody BuildingDTO buildingDTO){
+		valiDate(buildingDTO);
+		return "success";
 	}
-	public void valiDate(BuildingDTO buildingDTO) throws FieldRequiredException{
-		if(buildingDTO.getName() == "" || buildingDTO.getNumberOfBasement() == null || buildingDTO.getName() == null) {
+	
+	public void valiDate(BuildingDTO buildingDTO){
+		if(buildingDTO.getName().trim().isEmpty() || buildingDTO.getNumberOfBasement() == null || buildingDTO.getName() == null) {
 			throw new FieldRequiredException("name or numberOfBasement is null!");
 		}
 	}
-//	@PostMapping(value = "/api/building")
-//	public void createBuilding(@RequestBody Map<String, String> body) {
-//		for(Map.Entry<String, String> mp : body.entrySet()) {
-//			System.out.println(mp.getKey() + ": " + mp.getValue());
-//		}
-//	}
+	@GetMapping(value="/api/building")
+	public List<BuildingDTO> getAllBuilding(){
+	    List<BuildingDTO> buildings = buildingService.getAllBuilding();
+	    return buildings;
+	}
 	@PutMapping(value = "/api/building/update")
 	public BuildingDTO updateBuilding(@RequestBody BuildingDTO buildingDTO) {
 		return buildingDTO;
